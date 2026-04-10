@@ -8,10 +8,10 @@ interface NavigationLink {
 }
 
 const navigationLinks: NavigationLink[] = [
-  { name: "Возможности", href: "#features" },
-  { name: "Тарифы", href: "#pricing" },
-  { name: "Решения", href: "#solutions" },
-  { name: "Ресурсы", href: "#resources" },
+  { name: "Преимущества", href: "#features" },
+  { name: "Материалы", href: "#materials" },
+  { name: "Оборудование", href: "#equipment" },
+  { name: "Сертификаты", href: "#certificates" },
 ];
 
 export const PortfolioNavbar = () => {
@@ -55,7 +55,7 @@ export const PortfolioNavbar = () => {
               onClick={() => handleLinkClick("#home")}
               className="text-2xl font-bold text-foreground hover:text-primary transition-colors duration-200"
             >
-              <span className="font-extrabold">СинхроЛинк</span>
+              <span className="font-extrabold text-[#111A4A]">УплотнениеПро</span>
             </button>
           </div>
 
@@ -65,10 +65,10 @@ export const PortfolioNavbar = () => {
                 <button
                   key={link.name}
                   onClick={() => handleLinkClick(link.href)}
-                  className="text-foreground hover:text-primary px-3 py-2 text-base font-medium transition-colors duration-200 relative group"
+                  className="text-[#111A4A] hover:text-[#ff632f] px-3 py-2 text-base font-medium transition-colors duration-200 relative group"
                 >
                   <span>{link.name}</span>
-                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
+                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#ff632f] transition-all duration-300 group-hover:w-full" />
                 </button>
               ))}
             </div>
@@ -76,17 +76,17 @@ export const PortfolioNavbar = () => {
 
           <div className="hidden md:block">
             <button
-              onClick={() => handleLinkClick("#contact")}
-              className="bg-[#156d95] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#156d95]/90 transition-all duration-200 hover:rounded-2xl shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px]"
+              onClick={() => handleLinkClick("#cta")}
+              className="bg-[#ff632f] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#e5561a] transition-all duration-200 hover:rounded-2xl shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px]"
             >
-              <span className="font-medium">Попробовать бесплатно</span>
+              <span className="font-medium">Перейти к конструктору</span>
             </button>
           </div>
 
           <div className="md:hidden">
             <button
               onClick={toggleMobileMenu}
-              className="text-foreground hover:text-primary p-2 rounded-md transition-colors duration-200"
+              className="text-foreground hover:text-[#ff632f] p-2 rounded-md transition-colors duration-200"
               aria-label="Открыть меню"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -109,17 +109,17 @@ export const PortfolioNavbar = () => {
                 <button
                   key={link.name}
                   onClick={() => handleLinkClick(link.href)}
-                  className="block w-full text-left text-foreground hover:text-primary py-3 text-lg font-medium transition-colors duration-200"
+                  className="block w-full text-left text-foreground hover:text-[#ff632f] py-3 text-lg font-medium transition-colors duration-200"
                 >
                   <span>{link.name}</span>
                 </button>
               ))}
               <div className="pt-4 border-t border-border">
                 <button
-                  onClick={() => handleLinkClick("#contact")}
-                  className="w-full bg-[#156d95] text-white px-[18px] py-[15px] rounded-full text-base font-semibold hover:bg-[#156d95]/90 transition-all duration-200"
+                  onClick={() => handleLinkClick("#cta")}
+                  className="w-full bg-[#ff632f] text-white px-[18px] py-[15px] rounded-full text-base font-semibold hover:bg-[#e5561a] transition-all duration-200"
                 >
-                  <span>Попробовать бесплатно</span>
+                  <span>Перейти к конструктору</span>
                 </button>
               </div>
             </div>

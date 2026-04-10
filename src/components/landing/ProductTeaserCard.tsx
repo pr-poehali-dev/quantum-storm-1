@@ -1,100 +1,90 @@
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import Icon from "@/components/ui/icon";
 
-interface ProductTeaserCardProps {
-  dailyVolume?: string;
-  dailyVolumeLabel?: string;
-  headline?: string;
-  subheadline?: string;
-  description?: string;
-  primaryButtonText?: string;
-  primaryButtonHref?: string;
-  secondaryButtonText?: string;
-  secondaryButtonHref?: string;
-}
-
-export const ProductTeaserCard = (props: ProductTeaserCardProps) => {
-  const {
-    dailyVolumeLabel = "ОБРАБОТАНО СООБЩЕНИЙ ЗА СУТКИ",
-    headline = "Интеллектуальный слой для современных коммуникаций",
-    subheadline = "СинхроЛинк объединяет все ваши звонки, чаты и встречи в единую AI-платформу — предоставляя аналитику в реальном времени, анализ тональности и синхронизацию команды.",
-    primaryButtonText = "Начать анализ",
-    primaryButtonHref = "",
-    secondaryButtonText = "Документация API",
-    secondaryButtonHref = "",
-  } = props;
-
+export const ProductTeaserCard = () => {
   return (
-    <section className="w-full px-8 pt-32 pb-16">
+    <section className="w-full px-8 pt-32 pb-16" id="home">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-12 gap-2">
+        <div className="grid grid-cols-12 gap-6">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.645, 0.045, 0.355, 1] }}
-            className="col-span-12 lg:col-span-6 bg-[#e9e9e9] rounded-[40px] p-12 lg:p-16 flex flex-col justify-end aspect-square overflow-hidden"
+            className="col-span-12 lg:col-span-6 flex flex-col justify-center py-12 lg:py-20"
           >
-            <a
-              href={primaryButtonHref}
-              onClick={(e) => e.preventDefault()}
-              className="flex flex-col gap-1 text-[#9a9a9a]"
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="inline-flex items-center gap-2 bg-[#2f57e1]/10 text-[#2f57e1] rounded-full px-4 py-2 text-sm font-medium mb-8 w-fit"
             >
-              <motion.span
-                initial={{ transform: "translateY(20px)", opacity: 0 }}
-                animate={{ transform: "translateY(0px)", opacity: 1 }}
-                transition={{ duration: 0.4, ease: [0.645, 0.045, 0.355, 1], delay: 0.6 }}
-                className="text-sm uppercase tracking-tight font-mono flex items-center gap-1"
-              >
-                {dailyVolumeLabel}
-                <ArrowUpRight className="w-[0.71em] h-[0.71em]" />
-              </motion.span>
-            </a>
+              <div className="w-2 h-2 rounded-full bg-[#2f57e1]" />
+              Собственное производство · Точность 0.01 мм
+            </motion.div>
 
-            <h1
-              className="text-[56px] leading-[60px] tracking-tight text-[#202020] max-w-[520px] mb-6 font-medium"
-            >
-              {headline}
+            <h1 className="text-[52px] leading-[56px] tracking-tight text-[#111A4A] mb-6 font-semibold">
+              Уплотнения любой сложности{" "}
+              <span className="text-[#ff632f]">под ваш проект</span>
             </h1>
 
-            <p className="text-lg leading-7 text-[#404040] max-w-[520px] mb-6">
-              {subheadline}
+            <p className="text-xl leading-8 text-[#111A4A]/60 mb-10 max-w-[500px]">
+              Собственное производство, точность до 0.01 мм, подбор материала инженерами. Серийное и единичное производство без потери качества.
             </p>
 
-            <ul className="flex gap-1.5 flex-wrap mt-10">
-              <li>
-                <a
-                  href={primaryButtonHref}
-                  onClick={(e) => e.preventDefault()}
-                  className="block cursor-pointer text-white bg-[#156d95] rounded-full px-[18px] py-[15px] text-base leading-4 whitespace-nowrap transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:rounded-2xl"
-                >
-                  {primaryButtonText}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={secondaryButtonHref}
-                  onClick={(e) => e.preventDefault()}
-                  className="block cursor-pointer text-[#202020] border border-[#202020] rounded-full px-[18px] py-[15px] text-base leading-4 whitespace-nowrap transition-all duration-150 ease-[cubic-bezier(0.455,0.03,0.515,0.955)] hover:rounded-2xl"
-                >
-                  {secondaryButtonText}
-                </a>
-              </li>
-            </ul>
+            <div className="flex flex-wrap gap-4">
+              <button
+                className="inline-flex items-center gap-2 bg-[#ff632f] text-white rounded-full px-7 py-4 text-base font-semibold hover:bg-[#e5561a] transition-all duration-200 hover:rounded-2xl shadow-md hover:shadow-lg group"
+              >
+                Перейти к конструктору
+                <ArrowRight className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-1" />
+              </button>
+              <button
+                className="inline-flex items-center gap-2 text-[#111A4A] border-2 border-[#111A4A]/20 rounded-full px-7 py-4 text-base font-medium hover:border-[#111A4A]/50 transition-all duration-200 hover:rounded-2xl"
+              >
+                Запросить КП
+              </button>
+            </div>
+
+            <div className="flex items-center gap-8 mt-12 pt-8 border-t border-[#111A4A]/10">
+              <div>
+                <div className="text-2xl font-semibold text-[#111A4A]">±0.005 мм</div>
+                <div className="text-sm text-[#111A4A]/50 mt-1">Точность ЧПУ</div>
+              </div>
+              <div className="w-px h-10 bg-[#111A4A]/10" />
+              <div>
+                <div className="text-2xl font-semibold text-[#111A4A]">от 3 дней</div>
+                <div className="text-sm text-[#111A4A]/50 mt-1">Срок изготовления</div>
+              </div>
+              <div className="w-px h-10 bg-[#111A4A]/10" />
+              <div>
+                <div className="text-2xl font-semibold text-[#111A4A]">6 видов</div>
+                <div className="text-sm text-[#111A4A]/50 mt-1">Материалов</div>
+              </div>
+            </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: [0.645, 0.045, 0.355, 1], delay: 0.2 }}
-            className="col-span-12 lg:col-span-6 bg-gradient-to-br from-[#156d95]/10 to-[#156d95]/30 rounded-[40px] flex justify-center items-center aspect-square overflow-hidden"
+            className="col-span-12 lg:col-span-6 flex items-center justify-center"
           >
-            <div className="flex flex-col items-center justify-center text-center p-8">
-              <div className="w-32 h-32 rounded-full bg-[#156d95]/20 flex items-center justify-center mb-6">
-                <svg className="w-16 h-16 text-[#156d95]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                </svg>
+            <div className="relative w-full max-w-[520px] aspect-square">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#2f57e1]/8 to-[#ff632f]/8 rounded-[40px]" />
+              <div className="absolute inset-4 rounded-[32px] overflow-hidden">
+                <img
+                  src="https://cdn.poehali.dev/projects/e9a9fb97-f09a-477b-b50a-a82eb78fbd86/files/bcb319fc-a36b-478a-bed0-a8cf29b7722c.jpg"
+                  alt="Уплотнения производства"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-6 right-6 bg-[#ff632f] text-white rounded-xl px-3 py-2 text-xs font-semibold shadow-lg">
+                  Точность ±0.005 мм
+                </div>
+                <div className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm rounded-xl px-3 py-2 text-xs font-semibold shadow-lg border border-[#2f57e1]/10 text-[#2f57e1]">
+                  ISO 9001
+                </div>
               </div>
-              <p className="text-[#156d95] font-medium text-xl">Облачная аналитика</p>
             </div>
           </motion.div>
         </div>

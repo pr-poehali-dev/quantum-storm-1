@@ -1,198 +1,104 @@
-import { useState } from "react";
-import { CheckIcon } from "@radix-ui/react-icons";
-import { cn } from "@/lib/utils";
-
-type PlanLevel = "starter" | "pro" | "enterprise";
-
-interface PricingFeature {
-  name: string;
-  included: PlanLevel | "all";
-}
-
-interface PricingPlan {
-  name: string;
-  level: PlanLevel;
-  price: {
-    monthly: number;
-    yearly: number;
-  };
-  popular?: boolean;
-}
-
-const features: PricingFeature[] = [
-  { name: "Анализ разговоров в реальном времени", included: "starter" },
-  { name: "До 10 000 сообщений/месяц", included: "starter" },
-  { name: "Базовое определение тональности", included: "starter" },
-  { name: "Поддержка по email", included: "starter" },
-  { name: "Продвинутый эмоциональный интеллект", included: "pro" },
-  { name: "До 100 000 сообщений/месяц", included: "pro" },
-  { name: "Мультиязычная поддержка (50+ языков)", included: "pro" },
-  { name: "Приоритетная поддержка", included: "pro" },
-  { name: "Кастомное обучение AI модели", included: "enterprise" },
-  { name: "Безлимитные сообщения", included: "enterprise" },
-  { name: "Персональный менеджер", included: "enterprise" },
-  { name: "Поддержка 24/7 по телефону", included: "enterprise" },
-  { name: "Доступ к API", included: "all" },
-  { name: "Инструменты командной работы", included: "all" },
-];
-
-const plans: PricingPlan[] = [
-  {
-    name: "Старт",
-    price: { monthly: 2900, yearly: 29000 },
-    level: "starter",
-  },
-  {
-    name: "Про",
-    price: { monthly: 9900, yearly: 99000 },
-    level: "pro",
-    popular: true,
-  },
-  {
-    name: "Бизнес",
-    price: { monthly: 29900, yearly: 299000 },
-    level: "enterprise",
-  },
-];
-
-function shouldShowCheck(included: PricingFeature["included"], level: PlanLevel): boolean {
-  if (included === "all") return true;
-  if (included === "enterprise" && level === "enterprise") return true;
-  if (included === "pro" && (level === "pro" || level === "enterprise")) return true;
-  if (included === "starter") return true;
-  return false;
-}
+import { motion } from "framer-motion";
+import Icon from "@/components/ui/icon";
 
 export function PricingSection() {
-  const [isYearly, setIsYearly] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<PlanLevel>("pro");
-
   return (
-    <section className="py-24 bg-background" id="pricing">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-[40px] font-normal leading-tight mb-4">Выберите тариф</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Начните работу с платформой коммуникационной аналитики СинхроЛинк. Все тарифы включают API доступ и инструменты командной работы.
-          </p>
-        </div>
+    <section className="py-24 bg-[#fafbff] px-8" id="equipment">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex items-center gap-2 bg-[#2f57e1]/10 text-[#2f57e1] rounded-full px-4 py-2 text-sm font-medium mb-6">
+              <Icon name="Cpu" size={14} fallback="Settings" />
+              ЧПУ-производство
+            </div>
+            <h2 className="text-[40px] font-semibold leading-tight tracking-tight text-[#111A4A] mb-6">
+              Современный токарный центр с ЧПУ
+            </h2>
+            <p className="text-lg text-[#111A4A]/60 leading-relaxed mb-8">
+              Многоосевая обработка, автоматическая подача, лазерный контроль геометрии. Точность изготовления ±0.005 мм. Серийное и единичное производство без потери качества.
+            </p>
 
-        <div className="flex justify-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-secondary rounded-full p-1">
-            <button
-              type="button"
-              onClick={() => setIsYearly(false)}
-              className={cn(
-                "px-6 py-2 rounded-full text-lg transition-all",
-                !isYearly ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Месячная
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsYearly(true)}
-              className={cn(
-                "px-6 py-2 rounded-full text-lg transition-all",
-                isYearly ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              Годовая
-              <span className="ml-2 text-sm text-[#156d95]">-17%</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {plans.map((plan) => (
-            <button
-              key={plan.name}
-              type="button"
-              onClick={() => setSelectedPlan(plan.level)}
-              className={cn(
-                "relative p-8 rounded-2xl text-left transition-all border-2",
-                selectedPlan === plan.level
-                  ? "border-[#156d95] bg-[#156d95]/5"
-                  : "border-border hover:border-[#156d95]/50"
-              )}
-            >
-              {plan.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#156d95] text-white px-4 py-1 rounded-full text-sm">
-                  Популярный
-                </span>
-              )}
-              <div className="mb-6">
-                <h3 className="text-2xl font-medium mb-2">{plan.name}</h3>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-medium">
-                    {(isYearly ? plan.price.yearly : plan.price.monthly).toLocaleString("ru-RU")} ₽
-                  </span>
-                  <span className="text-lg text-muted-foreground">/{isYearly ? "год" : "мес"}</span>
-                </div>
-              </div>
-              <div
-                className={cn(
-                  "w-full py-3 px-6 rounded-full text-lg transition-all text-center",
-                  selectedPlan === plan.level ? "bg-[#156d95] text-white" : "bg-secondary text-foreground"
-                )}
-              >
-                {selectedPlan === plan.level ? "Выбран" : "Выбрать"}
-              </div>
-            </button>
-          ))}
-        </div>
-
-        <div className="border border-border rounded-2xl overflow-hidden bg-card">
-          <div className="overflow-x-auto">
-            <div className="min-w-[768px]">
-              <div className="flex items-center p-6 bg-secondary border-b border-border">
-                <div className="flex-1">
-                  <h3 className="text-xl font-medium">Возможности</h3>
-                </div>
-                <div className="flex items-center gap-8">
-                  {plans.map((plan) => (
-                    <div key={plan.level} className="w-24 text-center text-lg font-medium">
-                      {plan.name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {features.map((feature, index) => (
-                <div
-                  key={feature.name}
-                  className={cn(
-                    "flex items-center p-6 transition-colors",
-                    index % 2 === 0 ? "bg-background" : "bg-secondary/30",
-                    feature.included === selectedPlan && "bg-[#156d95]/5"
-                  )}
-                >
-                  <div className="flex-1">
-                    <span className="text-lg">{feature.name}</span>
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              {[
+                { icon: "Crosshair", label: "Точность", value: "±0.005 мм" },
+                { icon: "Layers", label: "Оси обработки", value: "до 5 осей" },
+                { icon: "BarChart2", label: "Контроль", value: "Лазерный" },
+                { icon: "Repeat", label: "Производство", value: "Серийное и единичное" },
+              ].map((spec, i) => (
+                <div key={i} className="flex items-start gap-3 p-4 bg-white rounded-xl border border-[#111A4A]/8">
+                  <div className="w-9 h-9 rounded-lg bg-[#2f57e1]/8 flex items-center justify-center flex-shrink-0">
+                    <Icon name={spec.icon} size={16} className="text-[#2f57e1]" fallback="Settings" />
                   </div>
-                  <div className="flex items-center gap-8">
-                    {plans.map((plan) => (
-                      <div key={plan.level} className="w-24 flex justify-center">
-                        {shouldShowCheck(feature.included, plan.level) ? (
-                          <div className="w-6 h-6 rounded-full bg-[#156d95] flex items-center justify-center">
-                            <CheckIcon className="w-4 h-4 text-white" />
-                          </div>
-                        ) : (
-                          <span className="text-muted-foreground">-</span>
-                        )}
-                      </div>
-                    ))}
+                  <div>
+                    <div className="text-xs text-[#111A4A]/45 mb-0.5">{spec.label}</div>
+                    <div className="text-sm font-semibold text-[#111A4A]">{spec.value}</div>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        </div>
 
-        <div className="mt-12 text-center">
-          <button className="bg-[#156d95] text-white px-[18px] py-[15px] rounded-full text-lg hover:rounded-2xl transition-all">
-            Начать с тарифа {plans.find((p) => p.level === selectedPlan)?.name}
-          </button>
+            <button className="inline-flex items-center gap-2 bg-[#ff632f] text-white rounded-full px-7 py-4 text-base font-semibold hover:bg-[#e5561a] transition-all duration-200 hover:rounded-2xl shadow-md group">
+              Запросить расчёт
+              <Icon name="ArrowRight" size={16} className="transition-transform duration-150 group-hover:translate-x-1" fallback="ArrowRight" />
+            </button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="relative"
+          >
+            <div className="relative bg-gradient-to-br from-[#111A4A] to-[#1e2d6e] rounded-3xl overflow-hidden aspect-[4/3] flex items-center justify-center">
+              <div className="absolute inset-0 opacity-10">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute border border-white rounded-full"
+                    style={{
+                      width: `${(i + 1) * 80}px`,
+                      height: `${(i + 1) * 80}px`,
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div className="relative z-10 flex flex-col items-center gap-6">
+                <div className="w-32 h-32 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full bg-white/15 border border-white/25 flex items-center justify-center">
+                    <Icon name="Settings" size={36} className="text-white" fallback="Settings" />
+                  </div>
+                </div>
+                <div className="text-center">
+                  <p className="text-white/80 text-sm mb-1">Токарный центр ЧПУ</p>
+                  <p className="text-white/40 text-xs">Многоосевая обработка</p>
+                </div>
+              </div>
+
+              <div
+                className="absolute top-5 right-5 text-white font-bold text-sm px-4 py-2 rounded-xl"
+                style={{ backgroundColor: "#2f57e1" }}
+              >
+                Точность ±0.005 мм
+              </div>
+
+              <div className="absolute bottom-5 left-5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                  <span className="text-white text-xs font-medium">Производство: активно</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
