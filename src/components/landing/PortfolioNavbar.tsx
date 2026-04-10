@@ -74,7 +74,13 @@ export const PortfolioNavbar = () => {
             </div>
           </div>
 
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-3">
+            <a
+              href="/catalog"
+              className="text-[#111A4A] border border-[#111A4A]/20 px-[18px] rounded-full text-base font-medium hover:border-[#2f57e1] hover:text-[#2f57e1] transition-all duration-200 hover:rounded-2xl whitespace-nowrap leading-4 py-[14px]"
+            >
+              Каталог
+            </a>
             <button
               onClick={() => handleLinkClick("#cta")}
               className="bg-[#ff632f] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#e5561a] transition-all duration-200 hover:rounded-2xl shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px]"
