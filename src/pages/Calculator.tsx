@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Icon from "@/components/ui/icon";
 
@@ -17,6 +17,14 @@ interface Product {
   badgeColor?: string;
   score?: number;
   reasons?: string[];
+}
+
+interface DrawingFile {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  preview?: string;
 }
 
 interface FormState {
@@ -186,6 +194,44 @@ export default function Calculator() {
   const [form, setForm] = useState<FormState>(empty);
   const [submitted, setSubmitted] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [drawings, setDrawings] = useState<DrawingFile[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const ALLOWED_EXT = ["pdf", "dwg", "dxf", "png", "jpg", "jpeg", "tiff", "bmp", "step", "stp"];
+  const MAX_SIZE_MB = 20;
+
+  const addFiles = useCallback((fileList: FileList | null) => {
+    if (!fileList) return;
+    const next: DrawingFile[] = [];
+    Array.from(fileList).forEach((file) => {
+      const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
+      if (!ALLOWED_EXT.includes(ext)) return;
+      if (file.size > MAX_SIZE_MB * 1024 * 1024) return;
+      const id = Math.random().toString(36).slice(2);
+      const df: DrawingFile = { id, name: file.name, size: file.size, type: ext };
+      if (["png","jpg","jpeg","bmp"].includes(ext)) {
+        const reader = new FileReader();
+        reader.onload = (e) => setDrawings((prev) => prev.map((d) => d.id === id ? { ...d, preview: e.target?.result as string } : d));
+        reader.readAsDataURL(file);
+      }
+      next.push(df);
+    });
+    setDrawings((prev) => [...prev, ...next].slice(0, 10));
+  }, []);
+
+  const removeDrawing = (id: string) => setDrawings((prev) => prev.filter((d) => d.id !== id));
+
+  const formatSize = (bytes: number) => bytes < 1024 * 1024
+    ? `${(bytes / 1024).toFixed(0)} КБ`
+    : `${(bytes / (1024 * 1024)).toFixed(1)} МБ`;
+
+  const extIcon = (ext: string) => {
+    if (["pdf"].includes(ext)) return "FileText";
+    if (["dwg","dxf"].includes(ext)) return "PenTool";
+    if (["step","stp"].includes(ext)) return "Box";
+    return "Image";
+  };
 
   const set = (key: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));
@@ -349,6 +395,111 @@ export default function Calculator() {
                         </div>
                       ))}
                     </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </Section>
+
+          {/* 3. Чертежи */}
+          <Section icon="FileImage" title="Чертежи и эскизы">
+            <p className="text-xs text-[#111A4A]/45 mb-4">
+              Прикрепите чертёж или эскиз уплотнения — это ускорит подготовку КП. Форматы: PDF, DWG, DXF, STEP, PNG, JPG. До 10 файлов, до {MAX_SIZE_MB} МБ каждый.
+            </p>
+
+            {/* Drop zone */}
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={(e) => { e.preventDefault(); setIsDragging(false); addFiles(e.dataTransfer.files); }}
+              className={`relative cursor-pointer rounded-2xl border-2 border-dashed transition-all duration-200 flex flex-col items-center justify-center py-10 px-6 text-center
+                ${isDragging
+                  ? "border-[#2f57e1] bg-[#2f57e1]/5 scale-[1.01]"
+                  : "border-[#111A4A]/15 bg-[#f7f8fc] hover:border-[#2f57e1]/40 hover:bg-[#2f57e1]/3"
+                }`}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept=".pdf,.dwg,.dxf,.png,.jpg,.jpeg,.tiff,.bmp,.step,.stp"
+                className="hidden"
+                onChange={(e) => addFiles(e.target.files)}
+              />
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-colors ${isDragging ? "bg-[#2f57e1]/15" : "bg-[#111A4A]/6"}`}>
+                <Icon name="Upload" size={26} className={isDragging ? "text-[#2f57e1]" : "text-[#111A4A]/35"} fallback="Upload" />
+              </div>
+              <p className="text-sm font-semibold text-[#111A4A]/70 mb-1">
+                {isDragging ? "Отпустите файлы" : "Перетащите файлы сюда"}
+              </p>
+              <p className="text-xs text-[#111A4A]/40">или нажмите для выбора</p>
+              <p className="mt-3 text-[10px] text-[#111A4A]/30 uppercase tracking-wider">PDF · DWG · DXF · STEP · PNG · JPG</p>
+            </div>
+
+            {/* Список загруженных файлов */}
+            <AnimatePresence>
+              {drawings.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-4 overflow-hidden"
+                >
+                  <div className="flex flex-col gap-2">
+                    {drawings.map((file) => (
+                      <motion.div
+                        key={file.id}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 10 }}
+                        className="flex items-center gap-3 bg-white border border-[#111A4A]/8 rounded-xl px-4 py-3 group"
+                      >
+                        {/* Превью или иконка */}
+                        {file.preview ? (
+                          <img src={file.preview} alt={file.name} className="w-10 h-10 rounded-lg object-cover flex-shrink-0 border border-[#111A4A]/8" />
+                        ) : (
+                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                            file.type === "pdf" ? "bg-[#fff0ed]" :
+                            ["dwg","dxf"].includes(file.type) ? "bg-[#eff3ff]" :
+                            ["step","stp"].includes(file.type) ? "bg-[#f0faf4]" : "bg-[#f5f0ff]"
+                          }`}>
+                            <Icon
+                              name={extIcon(file.type) as Parameters<typeof Icon>[0]["name"]}
+                              size={18}
+                              className={
+                                file.type === "pdf" ? "text-[#ff632f]" :
+                                ["dwg","dxf"].includes(file.type) ? "text-[#2f57e1]" :
+                                ["step","stp"].includes(file.type) ? "text-[#1a7a4a]" : "text-[#7c3aed]"
+                              }
+                              fallback="File"
+                            />
+                          </div>
+                        )}
+
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-[#111A4A] truncate">{file.name}</p>
+                          <p className="text-[11px] text-[#111A4A]/40 uppercase">{file.type} · {formatSize(file.size)}</p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => removeDrawing(file.id)}
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-[#111A4A]/25 hover:bg-[#ff632f]/10 hover:text-[#ff632f] transition-all opacity-0 group-hover:opacity-100"
+                        >
+                          <Icon name="X" size={14} fallback="X" />
+                        </button>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <div className="mt-3 flex items-center justify-between text-xs text-[#111A4A]/40">
+                    <span>{drawings.length} файл{drawings.length === 1 ? "" : drawings.length < 5 ? "а" : "ов"} прикреплено</span>
+                    {drawings.length < 10 && (
+                      <button type="button" onClick={() => fileInputRef.current?.click()} className="text-[#2f57e1] hover:underline">
+                        + Добавить ещё
+                      </button>
+                    )}
                   </div>
                 </motion.div>
               )}
