@@ -81,11 +81,17 @@ export const PortfolioNavbar = () => {
             >
               Каталог
             </a>
+            <a
+              href="/calculator"
+              className="text-white bg-[#2f57e1] px-[18px] rounded-full text-base font-medium hover:bg-[#2547c7] transition-all duration-200 hover:rounded-2xl whitespace-nowrap leading-4 py-[14px]"
+            >
+              Конструктор расчёта
+            </a>
             <button
               onClick={() => handleLinkClick("#cta")}
               className="bg-[#ff632f] text-white px-[18px] rounded-full text-base font-semibold hover:bg-[#e5561a] transition-all duration-200 hover:rounded-2xl shadow-sm hover:shadow-md whitespace-nowrap leading-4 py-[15px]"
             >
-              <span className="font-medium">Перейти к конструктору</span>
+              <span className="font-medium">Связаться</span>
             </button>
           </div>
 
